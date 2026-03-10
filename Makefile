@@ -29,6 +29,9 @@ dev-auth: auth
 dev: env
 	docker compose --env-file "$(ENV_FILE)" -f "$(COMPOSE_FILE)" up --build
 
+up: env
+	docker compose --env-file "$(ENV_FILE)" -f "$(COMPOSE_FILE)" up -d
+
 down: env
 	docker compose --env-file "$(ENV_FILE)" -f "$(COMPOSE_FILE)" down
 
