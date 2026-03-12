@@ -40,6 +40,17 @@ else
     echo "==> pre-push: no refs to scan (skipping secret scan range step)."
 fi
 
+if ! command -v cargo >/dev/null 2>&1; then
+    if [ "${ZEROCLAW_SKIP_RUST_QUALITY_IF_NO_CARGO:-0}" = "1" ]; then
+        echo "==> pre-push: cargo not found; skipping rust quality/test gates (ZEROCLAW_SKIP_RUST_QUALITY_IF_NO_CARGO=1)."
+        exit 0
+    fi
+    echo "FAIL: cargo not found in PATH; cannot run rust quality/test gates." >&2
+    echo "Install Rust toolchain (https://rustup.rs) or push with:" >&2
+    echo "  ZEROCLAW_SKIP_RUST_QUALITY_IF_NO_CARGO=1 git push" >&2
+    exit 1
+fi
+
 echo "==> pre-push: running rust quality gate..."
 ./scripts/ci/rust_quality_gate.sh || {
     echo "FAIL: rust quality gate failed."

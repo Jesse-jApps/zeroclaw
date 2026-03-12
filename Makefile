@@ -26,13 +26,13 @@ auth: env
 	fi
 
 dev-auth: auth
-	docker compose --env-file "$(ENV_FILE)" -f "$(COMPOSE_FILE)" up --build
+	docker compose --env-file "$(ENV_FILE)" -f "$(COMPOSE_FILE)" up --build --force-recreate
 
 dev: env
-	docker compose --env-file "$(ENV_FILE)" -f "$(COMPOSE_FILE)" up --build
+	docker compose --env-file "$(ENV_FILE)" -f "$(COMPOSE_FILE)" up --build --force-recreate
 
 up: env
-	docker compose --env-file "$(ENV_FILE)" -f "$(COMPOSE_FILE)" up -d
+	docker compose --env-file "$(ENV_FILE)" -f "$(COMPOSE_FILE)" up -d --build --force-recreate
 
 down: env
 	docker compose --env-file "$(ENV_FILE)" -f "$(COMPOSE_FILE)" down
