@@ -146,7 +146,7 @@ services:
           'blocked_domains = []' \
           '' \
           '[gateway]' \
-          "port = ${ZEROCLAW_GATEWAY_PORT}" \
+          "port = $${ZEROCLAW_GATEWAY_PORT}" \
           'host = "[::]"' \
           'allow_public_bind = true' \
           '' \
@@ -167,6 +167,9 @@ services:
       - cargo-registry:/usr/local/cargo/registry
       - cargo-git:/usr/local/cargo/git
       - cargo-target:/app/target
+
+    ports:
+      - "127.0.0.1:${ZEROCLAW_HOST_PORT:-42618}:${ZEROCLAW_GATEWAY_PORT:-42618}"
 
 volumes:
   cargo-registry:
