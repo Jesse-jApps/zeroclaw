@@ -25,7 +25,7 @@ services:
       ZEROCLAW_CONFIG_DIR: /app/.zeroclaw
       ZEROCLAW_WORKSPACE: /app/playground
       ZEROCLAW_ALLOW_PUBLIC_BIND: "true"
-      ZEROCLAW_GATEWAY_PORT: "42617"
+      ZEROCLAW_GATEWAY_PORT: ${ZEROCLAW_GATEWAY_PORT:-42618}
       RUST_LOG: ${RUST_LOG:-info}
       ZEROCLAW_CARGO_FEATURES: ${ZEROCLAW_CARGO_FEATURES:-rag-pdf}
       ZEROCLAW_OBSERVABILITY_BACKEND: ${ZEROCLAW_OBSERVABILITY_BACKEND:-log}
@@ -146,7 +146,7 @@ services:
           'blocked_domains = []' \
           '' \
           '[gateway]' \
-          'port = 42617' \
+          "port = ${ZEROCLAW_GATEWAY_PORT}" \
           'host = "[::]"' \
           'allow_public_bind = true' \
           '' \
@@ -167,9 +167,6 @@ services:
       - cargo-registry:/usr/local/cargo/registry
       - cargo-git:/usr/local/cargo/git
       - cargo-target:/app/target
-
-    ports:
-      - "127.0.0.1:42617:42617"
 
 volumes:
   cargo-registry:
