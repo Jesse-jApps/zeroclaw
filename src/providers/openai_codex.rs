@@ -39,13 +39,13 @@ struct ResponsesRequest {
     parallel_tool_calls: bool,
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Clone, Debug, Serialize)]
 struct ResponsesInput {
     role: String,
     content: Vec<ResponsesInputContent>,
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Clone, Debug, Serialize)]
 struct ResponsesInputContent {
     #[serde(rename = "type")]
     kind: String,
