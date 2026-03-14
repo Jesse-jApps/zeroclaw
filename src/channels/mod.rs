@@ -2090,6 +2090,7 @@ async fn process_channel_message(
                 delta_tx,
                 ctx.hooks.as_deref(),
                 &effective_excluded_tools,
+                ctx.tool_call_dedup_exempt.as_ref(),
             ),
         ) => LlmExecutionResult::Completed(result),
     };
