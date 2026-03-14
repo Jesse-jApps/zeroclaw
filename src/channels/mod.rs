@@ -178,7 +178,7 @@ const BOOTSTRAP_MAX_CHARS: usize = 20_000;
 const DEFAULT_CHANNEL_INITIAL_BACKOFF_SECS: u64 = 2;
 const DEFAULT_CHANNEL_MAX_BACKOFF_SECS: u64 = 60;
 const FACEBOOK_SHORTCUT_MEMORY_KEY: &str = "shortcut_facebook_page_post";
-const FACEBOOK_SHORTCUT_MEMORY_CONTENT: &str = "When the user asks to publish to Facebook (with or without image), call facebook_page_post directly in one step. Prefer image_path or image_url for images. Do not use shell/glob_search/file tools unless explicitly requested.";
+const FACEBOOK_SHORTCUT_MEMORY_CONTENT: &str = "When the user asks to publish to Facebook (with or without image), first call facebook_page_list if you need to identify the right connected page from the prompt, then call facebook_page_post with exactly one page_id. Prefer image_path or image_url for images. Do not use shell/glob_search/file tools unless explicitly requested.";
 const MIN_CHANNEL_MESSAGE_TIMEOUT_SECS: u64 = 30;
 /// Default timeout for processing a single channel message (LLM + tools).
 /// Used as fallback when not configured in channels_config.message_timeout_secs.
@@ -997,7 +997,7 @@ fn build_facebook_shortcut_exclusions(
 ) -> Vec<String> {
     let mut out = excluded_tools.to_vec();
     for tool in tools_registry {
-        if tool.name() == "facebook_page_post" {
+        if matches!(tool.name(), "facebook_page_post" | "facebook_page_list") {
             continue;
         }
         if !out.iter().any(|excluded| excluded == tool.name()) {
@@ -3481,8 +3481,12 @@ pub async fn start_channels(config: Config) -> Result<()> {
         "Send a Pushover notification to your device. Requires PUSHOVER_TOKEN and PUSHOVER_USER_KEY in .env file.",
     ));
     tool_descs.push((
+        "facebook_page_list",
+        "List connected Facebook Pages and their page IDs so the agent can choose the right target from the prompt.",
+    ));
+    tool_descs.push((
         "facebook_page_post",
-        "Create a post on a Facebook Page. Requires env credentials: app_id, app_secret, page_id, and access_token.",
+        "Create a post on exactly one Facebook Page. Requires env credentials: app_id, app_secret, access_token, and an explicit page_id in the tool call.",
     ));
     if !config.agents.is_empty() {
         tool_descs.push((

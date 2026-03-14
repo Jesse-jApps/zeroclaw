@@ -70,7 +70,7 @@ pub use delegate::DelegateTool;
 pub use file_edit::FileEditTool;
 pub use file_read::FileReadTool;
 pub use file_write::FileWriteTool;
-pub use facebook_page_post::FacebookPagePostTool;
+pub use facebook_page_post::{FacebookPageListTool, FacebookPagePostTool};
 pub use git_operations::GitOperationsTool;
 pub use glob_search::GlobSearchTool;
 #[cfg(feature = "hardware")]
@@ -237,6 +237,7 @@ pub fn all_tools_with_runtime(
             security.clone(),
             workspace_dir.to_path_buf(),
         )),
+        Arc::new(FacebookPageListTool::new(workspace_dir.to_path_buf())),
         Arc::new(FacebookPagePostTool::new(
             security.clone(),
             workspace_dir.to_path_buf(),
@@ -412,6 +413,7 @@ mod tests {
         let names: Vec<&str> = tools.iter().map(|t| t.name()).collect();
         assert!(!names.contains(&"browser_open"));
         assert!(names.contains(&"schedule"));
+        assert!(names.contains(&"facebook_page_list"));
         assert!(names.contains(&"facebook_page_post"));
         assert!(names.contains(&"model_routing_config"));
         assert!(names.contains(&"pushover"));
@@ -455,6 +457,7 @@ mod tests {
         let names: Vec<&str> = tools.iter().map(|t| t.name()).collect();
         assert!(names.contains(&"browser_open"));
         assert!(names.contains(&"content_search"));
+        assert!(names.contains(&"facebook_page_list"));
         assert!(names.contains(&"facebook_page_post"));
         assert!(names.contains(&"model_routing_config"));
         assert!(names.contains(&"pushover"));
